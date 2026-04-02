@@ -787,6 +787,13 @@ class PLSWNoise(CorrelatedNoiseComponent):
         # since this is the SW DM value if n_earth = 1 cm^-3. the GP will scale it.
         dt_DM = (solar_wind_geometry * DMconst / (freqs**2)).value
 
+        # Modified implementation of SWGP basis
+        print(f'Using modified SWGP basis implementation')
+        tbl = toas.table
+        t = (tbl["tdbld"].quantity * u.day).to(u.s).value
+        T = np.max(t) - np.min(t)
+        dt_DM /= T
+        
         return Fmat * dt_DM[:, None]
 
     def get_noise_weights(self, toas: TOAs) -> np.ndarray:
