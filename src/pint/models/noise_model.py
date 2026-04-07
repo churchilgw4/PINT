@@ -791,7 +791,7 @@ class PLSWNoise(CorrelatedNoiseComponent):
         dt_DM = (solar_wind_geometry * DMconst / (freqs**2)).value
 
         print('PLSW Noise')
-        print(f'SW geometry : {solar_wind_geometry}')
+        # print(f'SW geometry : {solar_wind_geometry}')
         # print(f'dt_DM : {dt_DM}')
 
         # Modified implementation of SWGP basis
@@ -809,7 +809,7 @@ class PLSWNoise(CorrelatedNoiseComponent):
         DM = 10.391035310938096964 * dmu
         GeometricFactor = (solar_wind_geometry / DM).value
         Fmatsw = Fmat * D[:, None] * GeometricFactor[:, None]
-        
+        print(f'Fmatsw : {Fmatsw}')
         return Fmatsw
 
     
