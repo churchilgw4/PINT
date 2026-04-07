@@ -622,6 +622,9 @@ class PLDMNoise(CorrelatedNoiseComponent):
         freqs = self._parent.barycentric_radio_freq(toas).to(u.MHz)
         fref = 1400 * u.MHz
         D = (fref.value / freqs.value) ** 2
+        print('PLDM Noise')
+        print(f'D : {D}')
+        print(f"Fmat * D[:, None] : {Fmat * D[:, None]}")
 
         return Fmat * D[:, None]
 
@@ -787,12 +790,17 @@ class PLSWNoise(CorrelatedNoiseComponent):
         # since this is the SW DM value if n_earth = 1 cm^-3. the GP will scale it.
         dt_DM = (solar_wind_geometry * DMconst / (freqs**2)).value
 
+        print('PLSW Noise')
+        print(f'dt_DM : {dt_DM}')
+
         # Modified implementation of SWGP basis
         print(f'Using modified SWGP basis implementation')
         tbl = toas.table
         t = (tbl["tdbld"].quantity * u.day).to(u.s).value
         T = np.max(t) - np.min(t)
         dt_DM /= T
+
+        print(f'dt_DM/T : {dt_DM}')
         
         return Fmat * dt_DM[:, None]
 
