@@ -806,7 +806,7 @@ class PLSWNoise(CorrelatedNoiseComponent):
         freqs = self._parent.barycentric_radio_freq(toas).to(u.MHz)
         fref = 1400 * u.MHz
         D = (fref.value / freqs.value) ** 2
-        DM = 10.391035310938096964
+        DM = 10.391035310938096964 * dmu
         Fmatsw = Fmat * D[:, None] * solar_wind_geometry[:, None] / DM
         
         return Fmatsw
