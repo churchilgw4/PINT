@@ -807,7 +807,8 @@ class PLSWNoise(CorrelatedNoiseComponent):
         fref = 1400 * u.MHz
         D = (fref.value / freqs.value) ** 2
         DM = 10.391035310938096964 * dmu
-        Fmatsw = Fmat * D[:, None] * solar_wind_geometry[:, None] / DM
+        GeometricFactor = (solar_wind_geometry / DM).value
+        Fmatsw = Fmat * D[:, None] * GeometricFactor[:, None]
         
         return Fmatsw
 
