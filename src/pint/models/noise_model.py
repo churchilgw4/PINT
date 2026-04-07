@@ -799,9 +799,9 @@ class PLSWNoise(CorrelatedNoiseComponent):
         tbl = toas.table
         t = (tbl["tdbld"].quantity * u.day).to(u.s).value
         T = np.max(t) - np.min(t)
-        dt_DM /= T
+        dt_DM *= T
 
-        # print(f'dt_DM/T : {dt_DM}')
+        print(f'dt_DM*T : {dt_DM}')
 
         freqs = self._parent.barycentric_radio_freq(toas).to(u.MHz)
         fref = 1400 * u.MHz
@@ -809,11 +809,10 @@ class PLSWNoise(CorrelatedNoiseComponent):
         DM = 10.391035310938096964 * dmu
         GeometricFactor = (solar_wind_geometry / DM).value
         Fmatsw = Fmat * D[:, None] * GeometricFactor[:, None]
-        print(f'Fmatsw : {Fmatsw}')
-        return Fmatsw
+        # print(f'Fmatsw : {Fmatsw}')
+        # return Fmatsw
 
-    
-        # return Fmat * dt_DM[:, None]
+        return Fmat * dt_DM[:, None]
 
     def get_noise_weights(self, toas: TOAs) -> np.ndarray:
         """Return power law SW noise weights.
