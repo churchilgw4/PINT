@@ -623,7 +623,7 @@ class PLDMNoise(CorrelatedNoiseComponent):
         fref = 1400 * u.MHz
         D = (fref.value / freqs.value) ** 2
         print('PLDM Noise')
-        print(f'D : {D}')
+        # print(f'D : {D}')
         print(f"Fmat * D[:, None] : {Fmat * D[:, None]}")
 
         return Fmat * D[:, None]
@@ -791,8 +791,8 @@ class PLSWNoise(CorrelatedNoiseComponent):
         dt_DM = (solar_wind_geometry * DMconst / (freqs**2)).value
 
         print('PLSW Noise')
-        print(f'SW geometry : {solar_wind_geometry}')
-        print(f'Max SW geometry : {np.max(solar_wind_geometry)}')
+        # print(f'SW geometry : {solar_wind_geometry}')
+        # print(f'Max SW geometry : {np.max(solar_wind_geometry)}')
         # print(f'dt_DM : {dt_DM}')
 
         # Modified implementation of SWGP basis
@@ -808,10 +808,10 @@ class PLSWNoise(CorrelatedNoiseComponent):
         fref = 1400 * u.MHz
         D = (fref.value / freqs.value) ** 2
         # DM = 10.391035310938096964 * dmu
-        # GeometricFactor = (solar_wind_geometry / DM).value
-        # Fmatsw = Fmat * D[:, None] * GeometricFactor[:, None]
-        # print(f'Fmatsw : {Fmatsw}')
-        # return Fmatsw
+        NormaGeometricFactor = solar_wind_geometry.value / np.max(solar_wind_geometry.value)
+        Fmatsw = Fmat * D[:, None] * NormGeometricFactor[:, None]
+        print(f'Fmatsw : {Fmatsw}')
+        return Fmatsw
 
         return Fmat * dt_DM[:, None]
 
