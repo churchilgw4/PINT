@@ -622,9 +622,6 @@ class PLDMNoise(CorrelatedNoiseComponent):
         freqs = self._parent.barycentric_radio_freq(toas).to(u.MHz)
         fref = 1400 * u.MHz
         D = (fref.value / freqs.value) ** 2
-        print('PLDM Noise')
-        # print(f'D : {D}')
-        print(f"Fmat * D[:, None] : {Fmat * D[:, None]}")
 
         return Fmat * D[:, None]
 
@@ -787,33 +784,13 @@ class PLSWNoise(CorrelatedNoiseComponent):
         Fmat = create_fourier_design_matrix(t, f)
         # get solar wind geometry from pint.models.solar_wind_dispersion.SolarWindDispersion
         solar_wind_geometry = self._parent.solar_wind_geometry(toas)
-        # since this is the SW DM value if n_earth = 1 cm^-3. the GP will scale it.
-        dt_DM = (solar_wind_geometry * DMconst / (freqs**2)).value
-
-        print('PLSW Noise')
-        # print(f'SW geometry : {solar_wind_geometry}')
-        # print(f'Max SW geometry : {np.max(solar_wind_geometry)}')
-        # print(f'dt_DM : {dt_DM}')
-
-        # Modified implementation of SWGP basis
-        # print(f'Using modified SWGP basis implementation')
-        # tbl = toas.table
-        # t = (tbl["tdbld"].quantity * u.day).to(u.s).value
-        # T = np.max(t) - np.min(t)
-        # dt_DM *= T
-
-        # print(f'dt_DM*T : {dt_DM}')
-
+        
         freqs = self._parent.barycentric_radio_freq(toas).to(u.MHz)
         fref = 1400 * u.MHz
         D = (fref.value / freqs.value) ** 2
-        # DM = 10.391035310938096964 * dmu
         NormGeometricFactor = solar_wind_geometry.value / np.max(solar_wind_geometry.value)
-        Fmatsw = Fmat * D[:, None] * NormGeometricFactor[:, None]
-        print(f'Fmatsw : {Fmatsw}')
-        return Fmatsw
-
-        return Fmat * dt_DM[:, None]
+        
+        return Fmat * D[:, None] * NormGeometricFactor[:, None]
 
     def get_noise_weights(self, toas: TOAs) -> np.ndarray:
         """Return power law SW noise weights.
